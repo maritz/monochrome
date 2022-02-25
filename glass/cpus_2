@@ -1,0 +1,99 @@
+conky.config = {
+  update_interval = 2,  -- update interval in seconds
+  total_run_times = 0,  -- this is the number of times conky will update before quitting, set to zero to run forever
+  xinerama_head = 1,    -- for multi monitor setups, select monitor to run on: 0,1,2
+  double_buffer = true, -- use double buffering (reduces flicker, may not work for everyone)
+
+  -- window alignment
+  alignment = 'top_left',       -- top|middle|bottom_left|middle|right
+  gap_x = 410,                     -- same as passing -x at command line
+  gap_y = 185,
+
+
+  -- window settings
+  minimum_width = 113,
+  minimum_height = 220,
+  own_window = true,
+  own_window_type = 'desktop',    -- values: desktop (background), panel (bar)
+  own_window_hints = 'undecorated,sticky,below,skip_taskbar,skip_pager',
+
+
+  -- transparency configuration
+  own_window_transparent = true,
+  own_window_argb_visual = true,  -- turn on transparency
+  own_window_argb_value = 192,    -- range from 0 (transparent) to 255 (opaque)
+
+  -- window borders
+  draw_borders = false,     -- draw borders around the conky window
+  border_width = 0,         -- width of border window in pixels
+  stippled_borders = 0,     -- border stippling (dashing) in pixels
+  border_inner_margin = 0,  -- margin between the border and text in pixels
+  border_outer_margin = 0,  -- margin between the border and the edge of the window in pixels
+
+  -- graph settings
+  draw_graph_borders = true, -- borders around the graph, ex. cpu graph, network down speed grah
+                              -- does not include bars, ie. wifi strength bar, cpu bar
+
+  imlib_cache_flush_interval = 250,
+  -- use the parameter -n on ${image ..} to never cache and always update the image upon a change
+
+  -- font settings
+  use_xft = true,
+  xftalpha = 0,
+  draw_shades = false,    -- black shadow on text (not good if text is black)
+  draw_outline = false,   -- black outline around text (not good if text is black)
+  font0 = 'font URW Gothic Demi:size=8',      -- title
+  font1 = 'font URW Gothic Demi:size=16',     -- big value
+  font2 = 'font URW Gothic Demi:size=12',     -- mid value
+  font3 = 'font URW Gothic Demi:size=9',      -- small value
+  font4 = 'Nimbus Mono PS Regular:size=8',    -- text
+  default_color = '909EA6',
+  color0 = 'white',
+  color1 = 'aaaaaa',
+  color2 = '6a538b',      -- purple
+  color3 = '800020',      -- red
+  color5 = '666666',      -- gray
+};
+
+conky.text = [[
+################### CPU cores
+${image ~/dev/tools/conky-monochrome/images/glass/top.png -p 0,0}\
+${image ~/dev/tools/conky-monochrome/images/glass/block.png -p 0,5 -s 113x482}\
+################### V
+${voffset 0}${color5}${cpugraph cpu5 48,112 3A6CD1 D4305E -t}
+${voffset -55}${offset 5}${color0}${font0}V usage
+${voffset 2}${goto 20}${font1}${cpu cpu5}${font2}%
+${voffset 0}${color5}${execigraph 2 "~/dev/tools/conky-monochrome/glass/cpu_freq_graph.sh 5" 48,112 3A6CD1 964B91 -t}
+${voffset -55}${offset 5}${color0}${font0}V freq${color0}
+${voffset 2}${goto 20}${font1}${execi 2 "~/dev/tools/conky-monochrome/glass/cpu_freq.sh 5}${font3}MHz
+
+
+
+################### VI
+${voffset 0}${color5}${cpugraph cpu6 48,112 3A6CD1 D4305E -t}
+${voffset -55}${offset 5}${color0}${font0}VI usage
+${voffset 2}${goto 20}${font1}${cpu cpu6}${font2}%
+${voffset 6}${color5}${execigraph 2 "~/dev/tools/conky-monochrome/glass/cpu_freq_graph.sh 6" 48,112 3A6CD1 964B91 -t}
+${voffset -55}${offset 5}${color0}${font0}VI freq${color0}
+${voffset 2}${goto 20}${font1}${execi 2 "~/dev/tools/conky-monochrome/glass/cpu_freq.sh 6}${font3}MHz
+
+
+
+################### VII
+${voffset 0}${color5}${cpugraph cpu7 48,112 3A6CD1 D4305E -t}
+${voffset -55}${offset 5}${color0}${font0}VII usage
+${voffset 2}${goto 20}${font1}${cpu cpu7}${font2}%
+${voffset 6}${color5}${execigraph 2 "~/dev/tools/conky-monochrome/glass/cpu_freq_graph.sh 7" 48,112 3A6CD1 964B91 -t}
+${voffset -55}${offset 5}${color0}${font0}VII freq${color0}
+${voffset 2}${goto 20}${font1}${execi 2 "~/dev/tools/conky-monochrome/glass/cpu_freq.sh 7}${font3}MHz
+
+
+
+################### VIII
+${voffset 0}${color5}${cpugraph cpu8 48,112 3A6CD1 D4305E -t}
+${voffset -55}${offset 5}${color0}${font0}VIII usage
+${voffset 2}${goto 20}${font1}${cpu cpu8}${font2}%
+${voffset 6}${color5}${execigraph 2 "~/dev/tools/conky-monochrome/glass/cpu_freq_graph.sh 8" 48,112 3A6CD1 964B91 -t}
+${voffset -55}${offset 5}${color0}${font0}VIII freq${color0}
+${voffset 2}${goto 20}${font1}${execi 2 "~/dev/tools/conky-monochrome/glass/cpu_freq.sh 8}${font3}MHz
+]];

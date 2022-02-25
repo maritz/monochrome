@@ -1,25 +1,25 @@
 conky.config = {
-  update_interval = 2,  -- update interval in seconds
+  update_interval = 1,  -- update interval in seconds
   total_run_times = 0,  -- this is the number of times conky will update before quitting, set to zero to run forever
-  xinerama_head = 0,    -- for multi monitor setups, select monitor to run on: 0,1,2
+  xinerama_head = 1,    -- for multi monitor setups, select monitor to run on: 0,1,2
   double_buffer = true, -- use double buffering (reduces flicker, may not work for everyone)
 
   -- window alignment
   alignment = 'top_left',     -- top|middle|bottom_left|middle|right
   gap_x = 2,                 -- same as passing -x at command line
-  gap_y = 30,
+  gap_y = 0,
 
   -- window settings
   minimum_width = 113,
-  minimum_height = 578,
+  minimum_height = 178,
   own_window = true,
-  own_window_type = 'panel',    -- values: desktop (background), panel (bar)
-  own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+  own_window_type = 'normal',    -- values: desktop (background), panel (bar)
+  own_window_hints = 'undecorated,sticky,below,skip_taskbar,skip_pager',
 
   -- transparency configuration
   own_window_transparent = true,
   own_window_argb_visual = true,  -- turn on transparency
-  own_window_argb_value = 255,    -- range from 0 (transparent) to 255 (opaque)
+  own_window_argb_value = 192,    -- range from 0 (transparent) to 255 (opaque)
 
   -- window borders
   draw_borders = false,     -- draw borders around the conky window
@@ -29,7 +29,7 @@ conky.config = {
   border_outer_margin = 0,  -- margin between the border and the edge of the window in pixels
 
   -- graph settings
-  draw_graph_borders = false, -- borders around the graph, ex. cpu graph, network down speed grah
+  draw_graph_borders = true, -- borders around the graph, ex. cpu graph, network down speed grah
                               -- does not include bars, ie. wifi strength bar, cpu bar
 
   imlib_cache_flush_interval = 250,
@@ -40,98 +40,80 @@ conky.config = {
   xftalpha = 0,
   draw_shades = false,    -- black shadow on text (not good if text is black)
   draw_outline = false,   -- black outline around text (not good if text is black)
-  font0 = 'font URW Gothic Demi:size=8',      -- title
-  font1 = 'font URW Gothic Demi:size=16',     -- big value
-  font2 = 'font URW Gothic Demi:size=12',     -- mid value
-  font3 = 'font URW Gothic Demi:size=9',      -- small value
+  font = 'Nimbus Mono PS Regular:size=11',
+  font0 = 'Nimbus Mono PS Regular:size=8',      -- title
+  font1 = 'Nimbus Mono PS Regular:size=16',     -- big value
+  font2 = 'Nimbus Mono PS Regular:size=12',     -- mid value
   font4 = 'Nimbus Mono PS Regular:size=8',    -- text
-  default_color = 'white',
-  color1 = 'black',
-  color2 = '1a336b',      -- dark blue
+  font8 = 'Noto Sans Symbols2:size=9',      -- title
+  font9 = 'Noto Sans Symbols2:size=11',      -- title
+  default_color = '909EA6',
+  color0 = 'white',
+  color1 = 'aaaaaa',
+  color2 = '6a538b',      -- purple
   color3 = '800020',      -- red
+  color4 = 'D3BE16',      -- yellow
+  color5 = '666666',      -- gray
+  show_graph_scale = true,
 };
 
 conky.text = [[
+#
+${image ~/dev/tools/conky-monochrome/images/glass/top.png -p 0,0}\
+${image ~/dev/tools/conky-monochrome/images/glass/block.png -p 0,5 -s 113x624}\
+#
 ################### cpu
-${image ~/conky/monochrome/images/glass/top.png -n -p 0,0}\
-${image ~/conky/monochrome/images/glass/block.png -n -p 0,5}\
-${image ~/conky/monochrome/images/glass/cpu.png -n -p 0,5}\
-${voffset -6}${if_match ${cpu cpu0} >= 90}${cpugraph cpu0 48,112 cd0033 800020}${else}${cpugraph cpu0 48,112 315bb1 1a336b}${endif}
-${voffset -58}${offset 5}${font0}cpu
-${voffset 2}${alignr}${font1}${cpu cpu0}${font2}% 
-${voffset 5}${alignr}${color1}${font4}${loadavg} 
+${voffset 0}${color5}${cpugraph cpu0 48,112 3A6CD1 D4305E -t}
+${voffset -60}${offset 5}${color0}${font9}🫀${font0} CPU Usage
+${voffset -4}${goto 30}${font1}${cpu cpu0}${font2}% 
+${voffset -3}${alignr}${color1}${font4}${loadavg}
+## cpu temp
+${voffset 0}${color5}${execigraph 5 "~/dev/tools/conky-monochrome/glass/cpu_temp.sh 30 80" 48,112 3A6CD1 D4305E -t}
+${voffset -55}${offset 5}${color0}${font8}🌡${font0} CPU Temp
+${voffset -3}${goto 30}${font1}${if_match ${hwmon 1 temp 2} > 70}${color3}${endif}${hwmon 1 temp 2}${font2}°C
+
 ################### memory
-${image ~/conky/monochrome/images/glass/sidebar.png -n -p 0,75}\
-${image ~/conky/monochrome/images/glass/block.png -n -p 0,77}\
-${voffset 1}${if_match ${memperc} >= 90}${memgraph 48,112 cd0033 800020}${else}${memgraph 48,112 315bb1 1a336b}${endif}
-${voffset -50}${offset 5}${color}${font0}memory
-${voffset 2}${alignr}${font1}${memperc}${font2}% 
-${voffset 5}${alignr}${color1}${font4}${mem} / ${memmax} 
+${voffset 0}${color5}${memgraph 48,112 3A6CD1 D4305E -t}
+${voffset -65}${offset 5}${color0}${font9}▰${font0} RAM${color0}
+${voffset -3}${goto 20}${font1}${if_match ${memperc} > 95}${color3}${endif}${memperc}${font2}% 
+${voffset -3}${alignr}${color1}${font4}${mem} / ${memmax} 
 ################### swap
-${image ~/conky/monochrome/images/glass/block.png -n -p 0,149}\
-${image ~/conky/monochrome/images/glass/memory.png -n -p 12,111}\
-${voffset 12}${offset 5}${color}${font0}swap
-${voffset -2}${alignr}${font1}${swapperc}${font2}% 
-${voffset -5}${offset 16}${color2}${if_match ${swapperc} > 75}${color3}${endif}${swapbar 3,93}
+${voffset 8}${offset 5}${color0}${font9}🖴${font0} Swap
+${voffset -20}${goto 80}${font1}${if_match ${swapperc} > 0}${color4}${endif}${swapperc}${font2}% 
+${voffset -5}${offset 16}${color1}${if_match ${swapperc} > 75}${color3}${endif}${swapbar 3,93}
 ${voffset -9}${alignr}${color1}${font4}${swap} / ${swapmax} 
+
 ################### network bandwith
-${image ~/conky/monochrome/images/glass/sidebar.png -n -p 0,219}\
 ${if_gw}\
-${image ~/conky/monochrome/images/glass/block.png -n -p 0,221}\
-${image ~/conky/monochrome/images/glass/block.png -n -p 0,293}\
-${image ~/conky/monochrome/images/glass/internet.png -n -p 18,255}\
-# priority is given to wifi | if connected to a wifi network, graphs will show wifi bandwith usage
-# /sys/class/net/wlp4s0/operstate will contain 'up' if connected to a wifi network, 'down' otherwise
-${if_existing /sys/class/net/wlp4s0/operstate up}\
-# wifi upload
-${voffset 1}${upspeedgraph wlp4s0 48,112 6b91e5 546fb2 8200}
-${voffset -50}${offset 5}${color}${font0}wifi up
-${voffset 5}${alignr}${font2}${upspeed wlp4s0} 
-${voffset 5}${alignr}${color1}${font4}${totalup wlp4s0} total 
-# wifi download
-${voffset 1}${downspeedgraph wlp4s0 48,112 315bb1 1a336b 19000}
-${voffset -50}${offset 5}${color}${font0}wifi down
-${voffset 5}${alignr}${font2}${downspeed wlp4s0} 
-${voffset 5}${alignr}${color1}${font4}${totaldown wlp4s0} total 
-${else}\
 # ethernet upload
-${voffset 1}${upspeedgraph enp0s25 48,112 6b91e5 546fb2 3000}
-${voffset -50}${offset 5}${color}${font0}ethernet up
-${voffset 5}${alignr}${font2}${upspeed enp0s25} 
-${voffset 5}${alignr}${color1}${font4}${totalup enp0s25} total 
+${voffset -7}${color5}${upspeedgraph eno1 48,112 3A6CD1 D4305E 6300 -t}
+${voffset -57}${offset 5}${color0}${font8}🖧${font0} ethernet up
+${voffset -3}${goto 20}${font2}${if_match ${upspeedf eno1} >= 500}${upspeed eno1}${else}<500KiB${endif}
+${voffset 3}${alignr}${color1}${font4}${totalup eno1} total 
 # ethernet download
-${voffset 1}${downspeedgraph enp0s25 48,112 315bb1 1a336b 60000}
-${voffset -50}${offset 5}${color}${font0}ethernet down
-${voffset 5}${alignr}${font2}${downspeed enp0s25} 
-${voffset 5}${alignr}${color1}${font4}${totaldown enp0s25} total 
-${endif}\
+${voffset 1}${color5}${downspeedgraph eno1 48,112 3A6CD1 D4305E 51000 -t}
+${voffset -57}${offset 5}${color0}${font8}🖧${font0} ethernet down
+${voffset -3}${goto 20}${font2}${if_match ${downspeedf eno1} >= 1000}${downspeed eno1}${else}<1.0MiB${endif}
+${voffset 3}${alignr}${color1}${font4}${totaldown eno1} total 
 ${else}\
-${image ~/conky/monochrome/images/glass/noNetwork.png -n -p 0,221}\
-${voffset 12}${offset 5}${color}${font0}no network
+${image ~/dev/tools/conky-monochrome/images/glass/noNetwork.png -n -p 0,221}\
+${voffset 12}${offset 5}${color0}${font8}🖧${font0} no network
 ${voffset 106}
 ${endif}\
-################### disk - sda
-# disk write 151MiB
-${image ~/conky/monochrome/images/glass/sidebar.png -n -p 0,363}\
-${image ~/conky/monochrome/images/glass/block-disk.png -n -p 0,365}\
-${image ~/conky/monochrome/images/glass/hard-drive.png -n -p 2,366}\
-${voffset 1}${diskiograph_write /dev/sda 48,112 6b91e5 546fb2 302000}
-${voffset -50}${offset 5}${color}${font0}disk write
-${voffset 5}${alignr}${font2}${diskio_write /dev/sda} 
+
+################### disk
+# root fs space
+${offset 5}${color0}${font9}🖴${font0} root fs used space
+${voffset 0}${goto 20}${font2}${if_match ${fs_used_perc /} > 90}${color3}${endif}${fs_used_perc /}${font3}% 
+${voffset -20}${alignr}${offset -15}${color2}${if_match ${fs_used_perc /} > 90}${color3}${endif}${fs_bar 5,45 /}
+${voffset -10}${alignr}${color1}${font4}${fs_used /} / ${fs_size /} 
+# disk write
+${voffset 0}${color5}${diskiograph_write /dev/nvme0n1 48,112 3A6CD1 D4305E 2500000 -t}
+${voffset -57}${offset 5}${color0}${font9}🖴${font0} disk write
+${voffset 5}${alignr}${color5}${font2}${diskio_write /dev/nvme0n1} 
 # disk read
-${voffset -3}${diskiograph_read /dev/sda 48,112 315bb1 1a336b 280000}
-${voffset -58}${offset 5}${color}${font0}disk read
-${voffset 5}${alignr}${font2}${diskio_read /dev/sda} 
-# fedora
-${voffset 15}${offset 5}${color}${font0}fedora
-${voffset -14}${alignr}${font2}${fs_used_perc /}${font3}% 
-${voffset -2}${offset 16}${color2}${if_match ${fs_used_perc /} > 90}${color3}${endif}${fs_bar 3,93 /}
-${voffset -4}${alignr}${color1}${font4}${fs_used /} / ${fs_size /} 
-# home
-${image ~/conky/monochrome/images/glass/block-filesystem.png -n -p 0,520}\
-${voffset 12}${offset 5}${color}${font0}home
-${voffset -14}${alignr}${font2}${fs_used_perc /home}${font3}% 
-${voffset -2}${offset 16}${color2}${if_match ${fs_used_perc /home} > 90}${color3}${endif}${fs_bar 3,93 /home}
-${voffset -4}${alignr}${color1}${font4}${fs_used /home} / ${fs_size /home} 
-${image ~/conky/monochrome/images/glass/bottom.png -n -p 0,573}${voffset -402}
+${voffset 10}${color5}${diskiograph_read /dev/nvme0n1 48,112 3A6CD1 D4305E 3500000 -t}
+${voffset -65}${offset 5}${color0}${font9}🖴${font0} disk read
+${voffset 5}${alignr}${color5}${font2}${diskio_read /dev/nvme0n1} 
+#
 ]];
